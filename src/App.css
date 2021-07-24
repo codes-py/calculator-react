@@ -1,38 +1,71 @@
-.App {
-  text-align: center;
+:root {
+	--sym-width: 5rem;
+	--sym-height: 3rem;
+	--rows: 6;
+	--cols: 4;
+	--sym-long-width: calc((var(--sym-width) + 1rem ) * var(--cols));
+	--sym-long-height: calc((var(--sym-height) + 1rem) * var(--rows));
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+	user-select: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body {
+	background: rgb(123,232,233);
+	background: linear-gradient(90deg, rgba(123,232,233,1) 0%, rgba(86,240,247,0.4617996856945903) 47%, rgba(123,232,233,1) 100%);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+header {
+	text-align: center;
+	font-size: 2rem;
 }
 
-.App-link {
-  color: #61dafb;
+button {
+	font-family: 'Fira Code', monospace;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.calculator {
+	display: flex;
+	flex-wrap: wrap;
+	width: var(--sym-long-width);
+	height: var(--sym-long-height);
+	justify-content: space-around;
+	margin: auto;
+}
+
+.input-expr {
+	width: inherit;
+	height: var(--sym-height);
+	text-align: end;
+}
+
+.symbol-field {
+	width: var(--sym-width);
+	height: var(--sym-height);
+}
+
+li {
+	list-style-type: none;
+}
+
+.memory {
+	display: flex;
+	flex-wrap: wrap;
+	width: var(--sym-long-width);
+	height: calc(100vh - 1.5 * var(--sym-long-height));
+	overflow-y: auto;
+	margin: auto;
+}
+.memory div button {
+	width: calc(var(--sym-long-width) - var(--sym-width));
+	height: var(--sym-height);
+	text-align: center;
+	margin: 0.5rem;
+}
+
+.warning {
+	/* visibility: hidden; */
+	position: absolute;
+	left: 44%;
 }
