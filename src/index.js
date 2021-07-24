@@ -11,7 +11,7 @@ ReactDOM.render(
     </header>
     <App />
     <footer>
-      <a href="#">Github Link</a>
+      <a href="https://github.com/codes-py/calculator-react">Github Link</a>
     </footer>
   </React.StrictMode>,
   document.getElementById('root')
