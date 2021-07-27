@@ -1,42 +1,55 @@
 import React from 'react'
 
-const Symbol = ({ value, inputExpr, setInputExpr, memory, setMemory, className, errStatus, setErrStatus }) => {
+const Symbol = ({ value, inputExpr, setInputExpr, memory, setMemory, className }) => {
 
 	const changeInputHandler = () => {
 		if (!setInputExpr)
 			return;
 
+		if (inputExpr[inputExpr.length - 1] === '0' && !isNaN(Number(value)) && (inputExpr.length === 1 || inputExpr[inputExpr.length - 2] in { '+': 0, '-': 0, '*': 0, '/': 0 })) {
+			setInputExpr((prevInput) => prevInput.slice(0, prevInput.length - 1));
+			setInputExpr((prevInput) => prevInput + value);
+			return;
+		}
+
 		switch (value) {
 			case 'M':
-				if (!inputExpr) break;
-				setMemory(new Set([inputExpr, ...memory]));
-				setInputExpr('');
+				if (inputExpr.length > 2)
+					setMemory(new Set([inputExpr, ...memory]));
+				setInputExpr('0');
 				break;
 			case 'RST':
 				setMemory([]);
-			case 'C': setInputExpr(''); break;
+			case 'C': setInputExpr('0'); break;
 
 			case '=':
 				try {
 					if (isNaN(Number(inputExpr[inputExpr.length - 1]))) {
 						setInputExpr(inputExpr.slice(0, inputExpr.length - 1))
-					} else
-						setInputExpr(eval(inputExpr).toString());
+					}
+					else {
+						const res = eval(inputExpr);
+						if (isNaN(res) || !isFinite(res))
+							throw res;
+						else
+							setInputExpr(res.toString());
+					}
 				}
 				catch (e) {
-					setErrStatus(!errStatus);
-					console.log('Error in expression')
+					alert('Error in expression, Expression results in ' + e)
 				} break;
 
-			case 'DEL': setInputExpr(inputExpr.slice(0, inputExpr.length - 1)); break;
+			case 'DEL':
+				if (inputExpr.length === 1)
+					setInputExpr('0');
+				else
+					setInputExpr(inputExpr.slice(0, inputExpr.length - 1));
+				break;
 
-			// case '0':
-			// 	if (inputExpr.length == 0)
-			// 		break;
-			// 	if (inputExpr.length == 1 && inputExpr in { '+': 0, '-': 0 })
-			// 		break;
-			// 	setInputExpr(inputExpr + value);
-			// 	break;
+			case '.':
+				if (inputExpr.lastIndexOf('.') <= Math.max(...['+', '-', '*', '/'].map(el => inputExpr.lastIndexOf(el))))
+					setInputExpr(inputExpr + value);
+				break;
 
 			case '*':
 			case '/':
@@ -49,13 +62,7 @@ const Symbol = ({ value, inputExpr, setInputExpr, memory, setMemory, className, 
 					break;
 
 			default:
-				if (value.indexOf('.') === -1)
-					setInputExpr(inputExpr + value);
-
-			case '.':
-				if (inputExpr.lastIndexOf('.') <= Math.max(...['+', '-', '*', '/'].map(el => inputExpr.lastIndexOf(el))))
-					setInputExpr(inputExpr + value);
-				break;
+				setInputExpr(inputExpr + value);
 		}
 	}
 
